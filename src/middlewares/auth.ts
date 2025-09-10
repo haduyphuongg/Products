@@ -3,10 +3,13 @@ import { verifyToken } from '../utils/jwt';
 import User, { UserRole } from '../models/user.model';
 
 // Mở rộng interface Request để thêm thông tin user
+// Mở rộng interface Request của Express để thêm thuộc tính user
+// Điều này cho phép chúng ta lưu thông tin user vào req.user sau khi xác thực token
+// Thuộc tính user có kiểu any vì có thể chứa thông tin user từ database với nhiều trường khác nhau
 declare global {
     namespace Express {
         interface Request {
-            user?: any;
+            user?: any; // Thông tin user sẽ được gán vào đây sau khi xác thực token thành công
         }
     }
 }
@@ -84,89 +87,13 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction) =>
         if (req.user.role !== UserRole.ADMIN) {
             return res.status(403).json({
                 success: false,
-                message: 'Chỉ quản trị viên mới có quyền truy cập'
+                message: 'Chỉ admin mới có quyền truy cập'
             });
         }
 
         next();
     } catch (error) {
         console.error('Lỗi kiểm tra quyền admin:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Lỗi kiểm tra quyền'
-        });
-    }
-};
-
-
-
-/**
- * Middleware kiểm tra quyền truy cập theo role
- * @param roles Mảng các role được phép truy cập
- */
-export const requireRole = (roles: UserRole[]) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        try {
-            if (!req.user) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Vui lòng đăng nhập'
-                });
-            }
-
-            // Kiểm tra user có role phù hợp không
-            if (!roles.includes(req.user.role)) {
-                return res.status(403).json({
-                    success: false,
-                    message: 'Bạn không có quyền truy cập'
-                });
-            }
-
-            next();
-        } catch (error) {
-            console.error('Lỗi kiểm tra quyền role:', error);
-            return res.status(500).json({
-                success: false,
-                message: 'Lỗi kiểm tra quyền'
-            });
-        }
-    };
-};
-
-/**
- * Middleware kiểm tra quyền sở hữu sản phẩm (tùy chọn)
- * Kiểm tra user có phải là người tạo sản phẩm không
- */
-export const requireProductOwnership = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        if (!req.user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Vui lòng đăng nhập'
-            });
-        }
-
-        const productId = req.params.id;
-
-        // Tìm sản phẩm và kiểm tra quyền sở hữu
-        // const product = await Product.findById(productId);
-        // if (!product) {
-        //     return res.status(404).json({
-        //         success: false,
-        //         message: 'Sản phẩm không tồn tại'
-        //     });
-        // }
-
-        // if (product.createdBy.toString() !== req.user._id.toString()) {
-        //     return res.status(403).json({
-        //         success: false,
-        //         message: 'Bạn không có quyền chỉnh sửa sản phẩm này'
-        //     });
-        // }
-
-        next();
-    } catch (error) {
-        console.error('Lỗi kiểm tra quyền sở hữu:', error);
         return res.status(500).json({
             success: false,
             message: 'Lỗi kiểm tra quyền'

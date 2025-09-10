@@ -1,13 +1,40 @@
 import { Router } from 'express';
 import { register, login, verifyOTP, resendOTP, getCurrentUser } from "../controllers/user.controller";
-import { validateRegister, validateLogin, validateVerifyOTP, validateResendOTP } from "../middlewares/validate";
+import { validateRegister, validateLogin, validateVerifyOTP, validateResendOTP } from "../middlewares/auth.validate";
 import { authenticateToken } from "../middlewares/auth";
 
 const router = Router();
 
 /**
  * @swagger
- * /api/auth/register:
+ * /auth/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Đăng nhập
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginDto'
+ *           examples:
+ *             sample:
+ *               value:
+ *                 email: "user@example.com"
+ *                 password: "123456"
+ *     responses:
+ *       200:
+ *         description: Đăng nhập thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ */
+router.post('/login', validateLogin, login);
+
+/**
+ * @swagger
+ * /auth/register:
  *   post:
  *     tags: [Auth]
  *     summary: Đăng ký tài khoản mới
@@ -42,40 +69,7 @@ router.post('/register', validateRegister, register);
 
 /**
  * @swagger
- * /api/auth/login:
- *   post:
- *     tags: [Auth]
- *     summary: Đăng nhập
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/LoginDto'
- *           examples:
- *             sample:
- *               value:
- *                 email: "user@example.com"
- *                 password: "123456"
- *     responses:
- *       200:
- *         description: Đăng nhập thành công
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/LoginResponse'
- *       401:
- *         description: Thông tin đăng nhập không đúng
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
-router.post('/login', validateLogin, login);
-
-/**
- * @swagger
- * /api/auth/verify-otp:
+ * /auth/verify-otp:
  *   post:
  *     tags: [Auth]
  *     summary: Xác thực OTP
@@ -108,7 +102,7 @@ router.post('/verify-otp', validateVerifyOTP, verifyOTP);
 
 /**
  * @swagger
- * /api/auth/resend-otp:
+ * /auth/resend-otp:
  *   post:
  *     tags: [Auth]
  *     summary: Gửi lại OTP
@@ -142,7 +136,7 @@ router.post('/resend-otp', validateResendOTP, resendOTP);
 
 /**
  * @swagger
- * /api/auth/me:
+ * /auth/me:
  *   get:
  *     tags: [Auth]
  *     summary: Lấy thông tin người dùng hiện tại
@@ -155,18 +149,6 @@ router.post('/resend-otp', validateResendOTP, resendOTP);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/CurrentUserResponse'
- *       401:
- *         description: Không có token hoặc token không hợp lệ
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       404:
- *         description: Không tìm thấy người dùng
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.get('/me', authenticateToken, getCurrentUser);
 

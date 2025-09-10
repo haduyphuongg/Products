@@ -62,16 +62,6 @@ export const authSchemas = {
                 type: 'object',
                 properties: {
                     token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
-                    // user: {
-                    //     type: 'object',
-                    //     properties: {
-                    //         userId: { type: 'string', example: '66cfc3f480d7f8c2f5a71d2b' },
-                    //         email: { type: 'string', example: 'user@example.com' },
-                    //         name: { type: 'string', example: 'Nguyễn Văn A' },
-                    //         role: { type: 'string', example: 'user', enum: ['user', 'admin'] },
-                    //         isVerified: { type: 'boolean', example: true },
-                    //     },
-                    // },
                 },
             },
         },
@@ -81,22 +71,6 @@ export const authSchemas = {
         properties: {
             success: { type: 'boolean', example: true },
             message: { type: 'string', example: 'Xác thực email thành công!' },
-            // data: {
-            //     type: 'object',
-            //     properties: {
-            //         token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
-            //         user: {
-            //             type: 'object',
-            //             properties: {
-            //                 userId: { type: 'string', example: '66cfc3f480d7f8c2f5a71d2b' },
-            //                 email: { type: 'string', example: 'user@example.com' },
-            //                 name: { type: 'string', example: 'Nguyễn Văn A' },
-            //                 role: { type: 'string', example: 'user', enum: ['user', 'admin'] },
-            //                 isVerified: { type: 'boolean', example: true },
-            //             },
-            //         },
-            //     },
-            // },
         },
     },
     ResendOTPResponse: {
@@ -138,3 +112,5 @@ export const authSchemas = {
         },
     },
 };
+
+

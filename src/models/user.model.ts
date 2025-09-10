@@ -30,7 +30,7 @@ const UserSchema: Schema<IUser> = new Schema(
         password: {
             type: String,
             required: [true, 'Vui lòng nhập mật khẩu'],
-            minlength: [6, 'Mật khẩu phải có ít nhất 6 ký tự']
+            minlength: [8, 'Mật khẩu phải có ít nhất 8 ký tự']
         },
         name: {
             type: String,

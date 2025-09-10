@@ -1,6 +1,9 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 import { env } from '../config/env';
-import { productSchemas, authSchemas } from './schemas';
+import { authSchemas } from './schemas/auth.schema';
+import { bookSchemas } from './schemas/book.schema';
+import { borrowSchemas } from './schemas/borrow.schema';
+import { categorySchemas } from './schemas/category.schema';
 
 export const swaggerSpec = swaggerJSDoc({
     definition: {
@@ -11,8 +14,8 @@ export const swaggerSpec = swaggerJSDoc({
             description: 'API tài liệu cho hệ thống',
         },
         servers: [
-            { url: `http://localhost:${env.PORT}`, description: 'Local Development' },
-            { url: `https://products-f3qm.onrender.com`, description: 'Production' },
+            { url: `http://localhost:${env.PORT}`, description: 'Local Development', },
+            { url: `https://library-management-system-dipm.onrender.com/`, description: 'Local Development', },
         ],
         tags: [
             {
@@ -20,14 +23,24 @@ export const swaggerSpec = swaggerJSDoc({
                 description: 'Xác thực và quản lý người dùng'
             },
             {
-                name: 'Products',
-                description: 'Quản lý sản phẩm'
+                name: 'Books',
+                description: 'Quản lý sách'
+            },
+            {
+                name: 'Borrow',
+                description: 'Mượn và trả sách'
+            },
+            {
+                name: 'Categories',
+                description: 'Quản lý thể loại sách'
             }
         ],
         components: {
             schemas: {
-                ...productSchemas,
                 ...authSchemas,
+                ...bookSchemas,
+                ...borrowSchemas,
+                ...categorySchemas,
             },
             //   Nếu bạn có JWT:
             securitySchemes: {

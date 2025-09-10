@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import User, { UserRole } from "../models/user.model";
-import OTP, { IOTP } from "../models/otp.model";
+import OTP from "../models/otp.model";
 import { generateOTP, generateOTPExpiry } from "../utils/generateOtp";
 import { sendOTPEmail, sendVerificationSuccessEmail } from "../utils/mailer";
 import { generateToken } from "../utils/jwt";
@@ -24,7 +24,7 @@ export const register = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Tạo user mới
-        const user = await User.create({
+        await User.create({
             email,
             password: hashedPassword,
             name,
@@ -48,13 +48,6 @@ export const register = async (req: Request, res: Response) => {
         res.status(201).json({
             success: true,
             message: 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.',
-            // data: {
-            //     userId: user._id,
-            //     email: user.email,
-            //     name: user.name,
-            //     role: user.role,
-            //     isVerified: user.isVerified
-            // }
         });
 
     } catch (error) {
@@ -128,7 +121,7 @@ export const verifyOTP = async (req: Request, res: Response) => {
         if (user.isVerified) {
             return res.status(400).json({
                 success: false,
-                message: 'Email đã được xác thực trước đó'
+                message: 'Email đã được xác thực'
             });
         }
 
@@ -136,7 +129,6 @@ export const verifyOTP = async (req: Request, res: Response) => {
         const otpRecord = await OTP.findOne({
             email,
             otp,
-            isUsed: false,
             expiresAt: { $gt: new Date() }
         });
 
@@ -156,27 +148,9 @@ export const verifyOTP = async (req: Request, res: Response) => {
         // Gửi email thông báo thành công
         await sendVerificationSuccessEmail(email, user.name);
 
-        // Tạo JWT token
-        const token = generateToken({
-            userId: user._id,
-            email: user.email,
-            name: user.name,
-            role: user.role
-        });
-
         res.status(200).json({
             success: true,
-            message: 'Xác thực email thành công!',
-            data: {
-                token,
-                user: {
-                    userId: user._id,
-                    email: user.email,
-                    name: user.name,
-                    role: user.role,
-                    isVerified: true
-                }
-            }
+            message: 'Xác thực email thành công!'
         });
 
     } catch (error) {
@@ -231,14 +205,7 @@ export const login = async (req: Request, res: Response) => {
             success: true,
             message: 'Đăng nhập thành công',
             data: {
-                token,
-                // user: {
-                //     userId: user._id,
-                //     email: user.email,
-                //     name: user.name,
-                //     role: user.role,
-                //     isVerified: user.isVerified
-                // }
+                token
             }
         });
 

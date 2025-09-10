@@ -5,7 +5,7 @@ import { z, ZodError } from 'zod';
 const registerSchema = z.object({
     name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự'),
     email: z.string().email('Email không hợp lệ'),
-    password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
+    password: z.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự'),
     role: z.enum(['user', 'admin']).optional() // Cho phép chỉ định role, không bắt buộc
 });
 
@@ -86,3 +86,5 @@ export const validateResendOTP = (req: Request, res: Response, next: NextFunctio
         next(error);
     }
 };
+
+

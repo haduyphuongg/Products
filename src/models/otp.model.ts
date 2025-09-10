@@ -5,7 +5,6 @@ export interface IOTP extends Document {
     email: string;        // Email người dùng
     otp: string;         // Mã OTP (One-Time Password)
     expiresAt: Date;     // Thời gian hết hạn
-    isUsed: boolean;     // Trạng thái đã sử dụng
     createdAt: Date;     // Thời gian tạo
 }
 
@@ -24,11 +23,7 @@ const OTPSchema: Schema<IOTP> = new Schema(
         },
         expiresAt: {
             type: Date,
-            required: [true, 'Thời gian hết hạn không được để trống']
-        },
-        isUsed: {
-            type: Boolean,
-            default: false         // Mặc định chưa sử dụng
+            required: true
         }
     },
     { timestamps: true }          // Tự động thêm createdAt và updatedAt
