@@ -14,8 +14,8 @@ export const swaggerSpec = swaggerJSDoc({
             description: 'API tài liệu cho hệ thống',
         },
         servers: [
+            { url: `https://products-f3qm.onrender.com`, description: 'Local Development', },
             { url: `http://localhost:${env.PORT}`, description: 'Local Development', },
-            { url: `https://library-management-system-dipm.onrender.com/`, description: 'Local Development', },
         ],
         tags: [
             {
